@@ -6,21 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Everest Movie</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js"></script>
 </head>
-
 <body>
 
-    <!-- Mobile Menu Button -->
     <button id="menuToggle" class="menu-toggle"
-        aria-label="Toggle navigation"
-        aria-expanded="false">
-        ☰
-    </button>
+        aria-label="Toggle navigation" aria-expanded="false">☰</button>
 
     <div id="overlay" class="overlay"></div>
 
-    <!-- Sidebar -->
     <aside id="sidebar" class="sidebar">
 
         <div class="brand">
@@ -30,13 +24,14 @@
         </div>
 
         <nav class="navigation">
+
             <p class="section-label">NAVIGATION</p>
 
             <button class="nav-link active" data-page="dashboard">
                 🏠 Dashboard
             </button>
 
-            <button class="nav-link" data-page="watchlist">
+            <button class="nav-link" data-page="watchlist" data-filter="all">
                 🎬 My Watchlist
             </button>
 
@@ -44,41 +39,56 @@
                 ➕ Add Movie
             </button>
 
+            <p class="section-label">MOVIE COLLECTION</p>
+
+            <button class="nav-link" data-page="watchlist" data-filter="watched">
+                ✓ Watched Movies
+            </button>
+
+            <button class="nav-link" data-page="watchlist" data-filter="unwatched">
+                🕒 Unwatched Movies
+            </button>
+
+            <button class="nav-link" data-page="watchlist" data-filter="rated">
+                ⭐ Rated Movies
+            </button>
+
             <p class="section-label">COMING SOON</p>
-
-            <button class="nav-link" disabled>
-                🔍 Movie Search
-            </button>
-
-            <button class="nav-link" disabled>
-                ⭐ Movie Ratings
-            </button>
 
             <button class="nav-link" disabled>
                 💬 Discussions
             </button>
 
-            <button class="nav-link" disabled>
-                📊 Statistics
-            </button>
         </nav>
 
         <div class="quick-stats">
+
             <p class="section-label">QUICK STATS</p>
 
             <div class="stat-row">
-                <span id="quickTotal">0</span>
+                <strong id="quickTotal">0</strong>
                 <span>Movies Saved</span>
             </div>
+
+            <div class="stat-row">
+                <strong id="quickWatched">0</strong>
+                <span>Movies Watched</span>
+            </div>
+
+            <div class="stat-row">
+                <strong id="quickAverage">—</strong>
+                <span>Average Rating</span>
+            </div>
+
         </div>
 
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
 
-        <!-- Dashboard Page -->
-        <section id="dashboard" class="page active">
+        <!-- Dashboard -->
+
+        <section id="dashboard" class="page">
 
             <header class="page-header">
                 <h2>Your Movie Story</h2>
@@ -97,9 +107,42 @@
                     <p>MOVIES ADDED TODAY</p>
                 </div>
 
+                <div class="stat-card green">
+                    <h3 id="watchedMovies">0</h3>
+                    <p>MOVIES WATCHED</p>
+                </div>
+
+                <div class="stat-card gold">
+                    <h3 id="unwatchedMovies">0</h3>
+                    <p>MOVIES UNWATCHED</p>
+                </div>
+
+                <div class="stat-card gold">
+                    <h3 id="averageRating">—</h3>
+                    <p>AVERAGE RATING</p>
+                </div>
+
+                <div class="stat-card green">
+                    <h3 id="ratedMovies">0</h3>
+                    <p>MOVIES RATED</p>
+                </div>
+
             </div>
 
             <div class="panel">
+                <h2>Watching Progress</h2>
+
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+
+                <p id="progressText">
+                    0% of your watchlist completed
+                </p>
+            </div>
+
+            <div class="panel">
+
                 <h2>Quick Actions</h2>
 
                 <button class="action-button" data-page="addMovie">
@@ -107,54 +150,140 @@
                     <span>→</span>
                 </button>
 
-                <button class="action-button" data-page="watchlist">
+                <button class="action-button"
+                    data-page="watchlist" data-filter="all">
                     <span>🎬 View My Watchlist</span>
                     <span>→</span>
                 </button>
+
+                <button class="action-button"
+                    data-page="watchlist" data-filter="watched">
+                    <span>✓ View Watched Movies</span>
+                    <span>→</span>
+                </button>
+
+                <button class="action-button"
+                    data-page="watchlist" data-filter="rated">
+                    <span>⭐ View Rated Movies</span>
+                    <span>→</span>
+                </button>
+
             </div>
 
             <div class="panel welcome-panel">
+
                 <div class="welcome-icon">🎥</div>
 
                 <h2>Welcome to Everest Movie!</h2>
 
                 <p>
-                    Start building your personal movie collection.
-                    Save movies you want to watch and keep your
-                    watchlist organized.
+                    Build your personal movie collection, track
+                    your watching progress, rate your favorite
+                    movies, and easily find saved movies.
                 </p>
 
                 <button class="primary-button" data-page="addMovie">
                     Add a Movie
                 </button>
+
             </div>
 
         </section>
 
-        <!-- Watchlist Page -->
+        <!-- Watchlist -->
+
         <section id="watchlist" class="page" hidden>
 
             <header class="page-header">
                 <h2>My Watchlist</h2>
-                <p>All the movies you want to watch.</p>
+                <p>Search, organize, and rate your movie collection.</p>
             </header>
 
             <div class="panel">
 
-                <div class="panel-heading">
-                    <h2>Saved Movies</h2>
+                <h2>Find Your Movies</h2>
 
-                    <button class="primary-button" data-page="addMovie">
-                        + Add Movie
-                    </button>
+                <div class="search-container">
+
+                    <label for="searchInput">Search movies</label>
+
+                    <div class="search-box">
+                        <span aria-hidden="true">🔍</span>
+
+                        <input type="search"
+                            id="searchInput"
+                            placeholder="Search by movie title..."
+                            autocomplete="off">
+
+                        <button id="clearSearch"
+                            class="clear-button"
+                            type="button">
+                            Clear
+                        </button>
+                    </div>
+
                 </div>
+
+                <div class="filter-container">
+
+                    <button class="filter-btn active"
+                        data-movie-filter="all" aria-pressed="true">
+                        All Movies
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="watched" aria-pressed="false">
+                        Watched
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="unwatched" aria-pressed="false">
+                        Unwatched
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="rated" aria-pressed="false">
+                        Rated
+                    </button>
+
+                </div>
+
+                <p id="resultsCount" role="status">Showing 0 movies</p>
+
+            </div>
+
+            <div class="panel">
+
+                <h2>Saved Movies</h2>
 
                 <ul id="movieList" class="movie-list"></ul>
 
                 <div id="emptyMessage" class="empty-state">
+
                     <div class="welcome-icon">🎬</div>
+
                     <h2>Your watchlist is empty</h2>
+
                     <p>Add your first movie to get started.</p>
+
+                    <button class="primary-button" data-page="addMovie">
+                        Add a Movie
+                    </button>
+
+                </div>
+
+                <div id="noResults" class="empty-state" hidden>
+
+                    <div class="welcome-icon">🔍</div>
+
+                    <h2>No results found</h2>
+
+                    <p>Try another movie title or change your filter.</p>
+
+                    <button id="resetFilters" class="primary-button">
+                        Reset Search and Filters
+                    </button>
+
                 </div>
 
                 <p id="watchlistMessage" role="status"></p>
@@ -163,7 +292,8 @@
 
         </section>
 
-        <!-- Add Movie Page -->
+        <!-- Add Movie -->
+
         <section id="addMovie" class="page" hidden>
 
             <header class="page-header">
@@ -179,12 +309,10 @@
 
                     <label for="movieTitle">Movie Title</label>
 
-                    <input
-                        type="text"
+                    <input type="text"
                         id="movieTitle"
                         placeholder="Enter movie title"
-                        autocomplete="off"
-                    >
+                        autocomplete="off">
 
                     <button type="submit" class="primary-button">
                         + Add to Watchlist
@@ -198,9 +326,7 @@
 
         </section>
 
-        <footer>
-            EVEREST MOVIE — SPRINT 1
-        </footer>
+        <footer>EVEREST MOVIE — YOUR CINEMA JOURNEY</footer>
 
     </main>
 
