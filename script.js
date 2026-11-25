@@ -1,43 +1,28 @@
 
-// Everest Movie - Sprint 1
+import { createStorage } from "./js/storage.js";
+import { MovieManager } from "./js/movieManager.js";
 
-// HTML Elements
+const manager = new MovieManager(createStorage());
+
 const movieForm = document.getElementById("movieForm");
 const movieTitle = document.getElementById("movieTitle");
 const movieList = document.getElementById("movieList");
 const message = document.getElementById("message");
 const emptyMessage = document.getElementById("emptyMessage");
-const watchlistMessage = document.getElementById("watchlistMessage");
+
+const watchlistMessage =
+    document.getElementById("watchlistMessage");
 
 const sidebar = document.getElementById("sidebar");
 const menuToggle = document.getElementById("menuToggle");
 const overlay = document.getElementById("overlay");
 
-// Load Saved Movies
-let movies = JSON.parse(localStorage.getItem("movies")) || [];
-
-// Support movies saved in the previous version
-movies = movies.map(movie => {
-    if (typeof movie === "string") {
-        return {
-            title: movie,
-            dateAdded: null
-        };
-    }
-
-    return movie;
-});
-
-// Save Movies
-function saveMovies() {
-    localStorage.setItem("movies", JSON.stringify(movies));
-}
-
 // Navigation
+
 function showPage(pageId) {
+
     document.querySelectorAll(".page").forEach(page => {
         page.hidden = page.id !== pageId;
-        page.classList.toggle("active", page.id === pageId);
     });
 
     document.querySelectorAll(".nav-link").forEach(link => {
@@ -51,160 +36,227 @@ function showPage(pageId) {
     window.scrollTo(0, 0);
 }
 
-// Navigation Buttons
 document.querySelectorAll("[data-page]").forEach(button => {
+
     button.addEventListener("click", () => {
         showPage(button.dataset.page);
     });
+
 });
 
-// Mobile Sidebar
-function openMenu() {
-    sidebar.classList.add("open");
-    overlay.classList.add("active");
-    menuToggle.textContent = "✕";
-    menuToggle.setAttribute("aria-expanded", "true");
-}
+// Mobile Navigation
 
 function closeMenu() {
     sidebar.classList.remove("open");
     overlay.classList.remove("active");
     menuToggle.textContent = "☰";
-    menuToggle.setAttribute("aria-expanded", "false");
 }
 
 menuToggle.addEventListener("click", () => {
+
     if (sidebar.classList.contains("open")) {
         closeMenu();
     } else {
-        openMenu();
+        sidebar.classList.add("open");
+        overlay.classList.add("active");
+        menuToggle.textContent = "✕";
     }
+
 });
 
 overlay.addEventListener("click", closeMenu);
 
 document.addEventListener("keydown", event => {
+
     if (event.key === "Escape") {
         closeMenu();
     }
+
 });
 
-// Dashboard Statistics
-function updateDashboard() {
-    const total = movies.length;
-    const today = new Date().toDateString();
+// Messages
 
-    const addedToday = movies.filter(movie => {
-        return movie.dateAdded &&
-            new Date(movie.dateAdded).toDateString() === today;
-    }).length;
-
-    document.getElementById("totalMovies").textContent = total;
-    document.getElementById("recentMovies").textContent = addedToday;
-    document.getElementById("sidebarCount").textContent = total;
-    document.getElementById("quickTotal").textContent = total;
-}
-
-// Display Messages
 function showMessage(element, text, type) {
     element.textContent = text;
     element.className = type;
 }
 
-// Display Watchlist
+// Dashboard Statistics
+
+function updateDashboard() {
+
+    const stats = manager.getStats();
+
+    document.getElementById("totalMovies").textContent =
+        stats.total;
+
+    document.getElementById("recentMovies").textContent =
+        stats.addedToday;
+
+    document.getElementById("watchedMovies").textContent =
+        stats.watched;
+
+    document.getElementById("unwatchedMovies").textContent =
+        stats.unwatched;
+
+    document.getElementById("sidebarCount").textContent =
+        stats.total;
+
+    document.getElementById("quickTotal").textContent =
+        stats.total;
+
+    document.getElementById("quickWatched").textContent =
+        stats.watched;
+
+    document.getElementById("progressBar").style.width =
+        stats.progress + "%";
+
+    document.getElementById("progressText").textContent =
+        stats.progress + "% of your watchlist completed";
+
+}
+
+// Display Movies
+
 function displayMovies() {
+
     movieList.innerHTML = "";
 
-    emptyMessage.style.display =
-        movies.length === 0 ? "block" : "none";
+    emptyMessage.hidden = manager.movies.length !== 0;
 
-    movies.forEach((movie, index) => {
+    manager.movies.forEach((movie, index) => {
+
         const li = document.createElement("li");
 
-        const title = document.createElement("span");
-        title.textContent = "🎬 " + movie.title;
+        const header = document.createElement("div");
+        header.className = "movie-card-header";
 
-        const removeButton = document.createElement("button");
-        removeButton.textContent = "Remove";
-        removeButton.className = "remove-btn";
+        const icon = document.createElement("span");
+        icon.className = "movie-icon";
+        icon.textContent = "🎬";
 
-        removeButton.addEventListener("click", () => {
-            removeMovie(index);
+        const info = document.createElement("div");
+        info.className = "movie-info";
+
+        const title = document.createElement("h3");
+        title.textContent = movie.title;
+
+        const date = document.createElement("p");
+
+        date.textContent = movie.dateAdded
+            ? "Added " + new Date(
+                movie.dateAdded
+            ).toLocaleDateString()
+            : "Saved Movie";
+
+        info.append(title, date);
+        header.append(icon, info);
+
+        const actions = document.createElement("div");
+        actions.className = "movie-actions";
+
+        // Watched Button
+
+        const statusButton = document.createElement("button");
+
+        statusButton.className = "status-btn";
+
+        statusButton.classList.toggle(
+            "watched",
+            movie.watched
+        );
+
+        statusButton.textContent = movie.watched
+            ? "✓ Watched"
+            : "Mark as Watched";
+
+        statusButton.setAttribute(
+            "aria-pressed",
+            String(movie.watched)
+        );
+
+        statusButton.addEventListener("click", () => {
+
+            const watched = manager.toggleWatched(index);
+
+            displayMovies();
+
+            showMessage(
+                watchlistMessage,
+                watched
+                    ? "Movie marked as watched!"
+                    : "Movie marked as unwatched!",
+                "success"
+            );
+
         });
 
-        li.appendChild(title);
-        li.appendChild(removeButton);
+        // Remove Button
+
+        const removeButton = document.createElement("button");
+
+        removeButton.className = "remove-btn";
+        removeButton.textContent = "Remove";
+
+        removeButton.addEventListener("click", () => {
+
+            manager.removeMovie(index);
+
+            displayMovies();
+
+            showMessage(
+                watchlistMessage,
+                "Movie removed successfully!",
+                "success"
+            );
+
+        });
+
+        actions.append(statusButton, removeButton);
+
+        li.append(header, actions);
+
         movieList.appendChild(li);
+
     });
 
     updateDashboard();
+
 }
 
 // Add Movie
+
 movieForm.addEventListener("submit", event => {
+
     event.preventDefault();
 
-    const title = movieTitle.value.trim();
+    try {
 
-    // Empty Title Validation
-    if (title === "") {
+        manager.addMovie(movieTitle.value);
+
+        movieTitle.value = "";
+
+        displayMovies();
+
         showMessage(
             message,
-            "Please enter a movie title.",
-            "error"
+            "Movie added successfully!",
+            "success"
         );
-        return;
-    }
 
-    // Duplicate Movie Validation
-    const duplicate = movies.some(movie =>
-        movie.title.toLowerCase() === title.toLowerCase()
-    );
+    } catch (error) {
 
-    if (duplicate) {
         showMessage(
             message,
-            "This movie is already in your watchlist.",
+            error.message,
             "error"
         );
-        return;
+
     }
 
-    // Create Movie
-    const newMovie = {
-        title: title,
-        dateAdded: new Date().toISOString()
-    };
-
-    movies.push(newMovie);
-
-    saveMovies();
-    displayMovies();
-
-    showMessage(
-        message,
-        "Movie added successfully!",
-        "success"
-    );
-
-    watchlistMessage.textContent = "";
-    movieTitle.value = "";
 });
 
-// Remove Movie
-function removeMovie(index) {
-    movies.splice(index, 1);
+// Initialize Website
 
-    saveMovies();
-    displayMovies();
-
-    showMessage(
-        watchlistMessage,
-        "Movie removed successfully!",
-        "success"
-    );
-}
-
-// Initialize Application
 displayMovies();
 showPage("dashboard");
