@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="style.css">
     <script type="module" src="script.js"></script>
 </head>
-
 <body>
 
     <button id="menuToggle" class="menu-toggle"
-        aria-label="Toggle navigation">☰</button>
+        aria-label="Toggle navigation" aria-expanded="false">☰</button>
 
     <div id="overlay" class="overlay"></div>
 
@@ -32,7 +31,7 @@
                 🏠 Dashboard
             </button>
 
-            <button class="nav-link" data-page="watchlist">
+            <button class="nav-link" data-page="watchlist" data-filter="all">
                 🎬 My Watchlist
             </button>
 
@@ -40,11 +39,21 @@
                 ➕ Add Movie
             </button>
 
-            <p class="section-label">COMING SOON</p>
+            <p class="section-label">MOVIE COLLECTION</p>
 
-            <button class="nav-link" disabled>
-                🔍 Movie Search
+            <button class="nav-link" data-page="watchlist" data-filter="watched">
+                ✓ Watched Movies
             </button>
+
+            <button class="nav-link" data-page="watchlist" data-filter="unwatched">
+                🕒 Unwatched Movies
+            </button>
+
+            <button class="nav-link" data-page="watchlist" data-filter="rated">
+                ⭐ Rated Movies
+            </button>
+
+            <p class="section-label">COMING SOON</p>
 
             <button class="nav-link" disabled>
                 💬 Discussions
@@ -121,7 +130,6 @@
             </div>
 
             <div class="panel">
-
                 <h2>Watching Progress</h2>
 
                 <div class="progress-track">
@@ -131,7 +139,6 @@
                 <p id="progressText">
                     0% of your watchlist completed
                 </p>
-
             </div>
 
             <div class="panel">
@@ -143,8 +150,21 @@
                     <span>→</span>
                 </button>
 
-                <button class="action-button" data-page="watchlist">
+                <button class="action-button"
+                    data-page="watchlist" data-filter="all">
                     <span>🎬 View My Watchlist</span>
+                    <span>→</span>
+                </button>
+
+                <button class="action-button"
+                    data-page="watchlist" data-filter="watched">
+                    <span>✓ View Watched Movies</span>
+                    <span>→</span>
+                </button>
+
+                <button class="action-button"
+                    data-page="watchlist" data-filter="rated">
+                    <span>⭐ View Rated Movies</span>
                     <span>→</span>
                 </button>
 
@@ -157,9 +177,9 @@
                 <h2>Welcome to Everest Movie!</h2>
 
                 <p>
-                    Build your personal movie collection,
-                    track your watching progress, and rate
-                    your favorite movies.
+                    Build your personal movie collection, track
+                    your watching progress, rate your favorite
+                    movies, and easily find saved movies.
                 </p>
 
                 <button class="primary-button" data-page="addMovie">
@@ -176,8 +196,61 @@
 
             <header class="page-header">
                 <h2>My Watchlist</h2>
-                <p>Organize and rate your favorite movies.</p>
+                <p>Search, organize, and rate your movie collection.</p>
             </header>
+
+            <div class="panel">
+
+                <h2>Find Your Movies</h2>
+
+                <div class="search-container">
+
+                    <label for="searchInput">Search movies</label>
+
+                    <div class="search-box">
+                        <span aria-hidden="true">🔍</span>
+
+                        <input type="search"
+                            id="searchInput"
+                            placeholder="Search by movie title..."
+                            autocomplete="off">
+
+                        <button id="clearSearch"
+                            class="clear-button"
+                            type="button">
+                            Clear
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="filter-container">
+
+                    <button class="filter-btn active"
+                        data-movie-filter="all" aria-pressed="true">
+                        All Movies
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="watched" aria-pressed="false">
+                        Watched
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="unwatched" aria-pressed="false">
+                        Unwatched
+                    </button>
+
+                    <button class="filter-btn"
+                        data-movie-filter="rated" aria-pressed="false">
+                        Rated
+                    </button>
+
+                </div>
+
+                <p id="resultsCount" role="status">Showing 0 movies</p>
+
+            </div>
 
             <div class="panel">
 
@@ -195,6 +268,20 @@
 
                     <button class="primary-button" data-page="addMovie">
                         Add a Movie
+                    </button>
+
+                </div>
+
+                <div id="noResults" class="empty-state" hidden>
+
+                    <div class="welcome-icon">🔍</div>
+
+                    <h2>No results found</h2>
+
+                    <p>Try another movie title or change your filter.</p>
+
+                    <button id="resetFilters" class="primary-button">
+                        Reset Search and Filters
                     </button>
 
                 </div>
@@ -222,12 +309,10 @@
 
                     <label for="movieTitle">Movie Title</label>
 
-                    <input
-                        type="text"
+                    <input type="text"
                         id="movieTitle"
                         placeholder="Enter movie title"
-                        autocomplete="off"
-                    >
+                        autocomplete="off">
 
                     <button type="submit" class="primary-button">
                         + Add to Watchlist

@@ -8,14 +8,12 @@ export class MovieManager {
         this.movies = storage.load().map(movie => {
 
             if (typeof movie === "string") {
-
                 return {
                     title: movie,
                     dateAdded: null,
                     watched: false,
                     rating: 0
                 };
-
             }
 
             return {
@@ -29,15 +27,12 @@ export class MovieManager {
             };
 
         });
-
     }
 
     // Save Movies
 
     save() {
-
         this.storage.save(this.movies);
-
     }
 
     // Add Movie
@@ -47,11 +42,7 @@ export class MovieManager {
         title = title.trim();
 
         if (!title) {
-
-            throw new Error(
-                "Please enter a movie title."
-            );
-
+            throw new Error("Please enter a movie title.");
         }
 
         const duplicate = this.movies.some(movie =>
@@ -59,11 +50,9 @@ export class MovieManager {
         );
 
         if (duplicate) {
-
             throw new Error(
                 "This movie is already in your watchlist."
             );
-
         }
 
         const movie = {
@@ -74,11 +63,9 @@ export class MovieManager {
         };
 
         this.movies.push(movie);
-
         this.save();
 
         return movie;
-
     }
 
     // Validate Movie Index
@@ -90,11 +77,8 @@ export class MovieManager {
             index < 0 ||
             index >= this.movies.length
         ) {
-
             throw new Error("Movie not found.");
-
         }
-
     }
 
     // Remove Movie
@@ -102,11 +86,8 @@ export class MovieManager {
     removeMovie(index) {
 
         this.validateIndex(index);
-
         this.movies.splice(index, 1);
-
         this.save();
-
     }
 
     // Watched and Unwatched Status
@@ -121,10 +102,9 @@ export class MovieManager {
         this.save();
 
         return this.movies[index].watched;
-
     }
 
-    // Rate Movie
+    // Movie Rating
 
     rateMovie(index, rating) {
 
@@ -135,11 +115,9 @@ export class MovieManager {
             rating < 1 ||
             rating > 5
         ) {
-
             throw new Error(
                 "Rating must be between 1 and 5."
             );
-
         }
 
         this.movies[index].rating = rating;
@@ -147,10 +125,39 @@ export class MovieManager {
         this.save();
 
         return rating;
-
     }
 
-    // Calculate Dashboard Statistics
+    // Search and Filter Movies
+
+    getFilteredMovies(search = "", filter = "all") {
+
+        const query = search.trim().toLowerCase();
+
+        return this.movies.filter(movie => {
+
+            const matchesSearch =
+                movie.title.toLowerCase().includes(query);
+
+            let matchesFilter = true;
+
+            if (filter === "watched") {
+                matchesFilter = movie.watched;
+            }
+
+            if (filter === "unwatched") {
+                matchesFilter = !movie.watched;
+            }
+
+            if (filter === "rated") {
+                matchesFilter = movie.rating > 0;
+            }
+
+            return matchesSearch && matchesFilter;
+
+        });
+    }
+
+    // Dashboard Statistics
 
     getStats() {
 
@@ -198,7 +205,5 @@ export class MovieManager {
             rated,
             average
         };
-
     }
-
 }

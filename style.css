@@ -135,7 +135,7 @@ input:focus-visible {
     cursor: default;
 }
 
-/* Sidebar Quick Statistics */
+/* Sidebar Statistics */
 
 .quick-stats {
     margin-top: auto;
@@ -292,7 +292,7 @@ input:focus-visible {
     border-bottom: none;
 }
 
-/* Welcome Panel */
+/* Welcome and Empty States */
 
 .welcome-panel,
 .empty-state {
@@ -310,6 +310,10 @@ input:focus-visible {
     color: var(--muted);
     max-width: 450px;
     margin: 0 auto 25px;
+}
+
+#noResults {
+    text-align: center;
 }
 
 /* Primary Buttons */
@@ -355,6 +359,97 @@ input:focus-visible {
 
 #movieForm .primary-button {
     align-self: flex-start;
+}
+
+/* Movie Search */
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container label {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--background);
+    border: 1px solid #393933;
+    border-radius: 8px;
+    padding: 12px 15px;
+}
+
+.search-box:focus-within {
+    border-color: var(--accent);
+}
+
+#searchInput {
+    width: 100%;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 5px;
+    outline: none;
+}
+
+#searchInput::placeholder {
+    color: var(--muted);
+}
+
+#searchInput::-webkit-search-cancel-button {
+    display: none;
+}
+
+.clear-button {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.clear-button:hover {
+    color: var(--text);
+}
+
+/* Movie Filters */
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    background: var(--background);
+    border: 1px solid #393933;
+    color: var(--muted);
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.filter-btn:hover {
+    background: #30332c;
+    color: var(--text);
+}
+
+.filter-btn.active {
+    background: #303b32;
+    border-color: #536b57;
+    color: #c5ddc9;
+}
+
+#resultsCount {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 10px 0 0;
 }
 
 /* Movie List */
@@ -409,7 +504,7 @@ input:focus-visible {
     margin-top: 15px;
 }
 
-/* Watched and Unwatched Buttons */
+/* Watched Status */
 
 .status-btn {
     border: 1px solid #514a36;
@@ -430,7 +525,7 @@ input:focus-visible {
     filter: brightness(1.2);
 }
 
-/* Remove Movie Button */
+/* Remove Button */
 
 .remove-btn {
     background: #352323;
@@ -446,7 +541,7 @@ input:focus-visible {
     background: #503030;
 }
 
-/* Movie Rating Section */
+/* Rating Stars */
 
 .rating-section {
     margin-top: 18px;
@@ -621,5 +716,10 @@ footer {
 
     .rating-value {
         margin-left: 5px;
+    }
+
+    .filter-btn {
+        flex: 1 1 40%;
+        text-align: center;
     }
 }
