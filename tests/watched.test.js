@@ -1,5 +1,11 @@
 
-import { describe, it, expect, beforeEach } from "vitest";
+import {
+    describe,
+    it,
+    expect,
+    beforeEach
+} from "vitest";
+
 import { MovieManager } from "../js/movieManager.js";
 import { createStorage } from "../js/storage.js";
 
@@ -47,7 +53,6 @@ describe("Watched Movie Functionality", () => {
         manager.addMovie("Interstellar");
 
         manager.toggleWatched(0);
-
         manager.toggleWatched(0);
 
         expect(manager.movies[0].watched).toBe(false);
@@ -69,7 +74,6 @@ describe("Watched Movie Functionality", () => {
     it("should calculate watched and unwatched counts", () => {
 
         manager.addMovie("Interstellar");
-
         manager.addMovie("Avatar");
 
         manager.toggleWatched(0);
@@ -77,9 +81,7 @@ describe("Watched Movie Functionality", () => {
         const stats = manager.getStats();
 
         expect(stats.watched).toBe(1);
-
         expect(stats.unwatched).toBe(1);
-
         expect(stats.progress).toBe(50);
 
     });

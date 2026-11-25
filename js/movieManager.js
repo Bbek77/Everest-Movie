@@ -12,30 +12,46 @@ export class MovieManager {
                 return {
                     title: movie,
                     dateAdded: null,
-                    watched: false
+                    watched: false,
+                    rating: 0
                 };
 
             }
 
             return {
                 ...movie,
-                watched: movie.watched === true
+                watched: movie.watched === true,
+                rating: Number.isInteger(movie.rating) &&
+                        movie.rating >= 1 &&
+                        movie.rating <= 5
+                    ? movie.rating
+                    : 0
             };
 
         });
 
     }
 
+    // Save Movies
+
     save() {
+
         this.storage.save(this.movies);
+
     }
+
+    // Add Movie
 
     addMovie(title) {
 
         title = title.trim();
 
         if (!title) {
-            throw new Error("Please enter a movie title.");
+
+            throw new Error(
+                "Please enter a movie title."
+            );
+
         }
 
         const duplicate = this.movies.some(movie =>
@@ -53,7 +69,8 @@ export class MovieManager {
         const movie = {
             title,
             dateAdded: new Date().toISOString(),
-            watched: false
+            watched: false,
+            rating: 0
         };
 
         this.movies.push(movie);
@@ -63,6 +80,8 @@ export class MovieManager {
         return movie;
 
     }
+
+    // Validate Movie Index
 
     validateIndex(index) {
 
@@ -78,6 +97,8 @@ export class MovieManager {
 
     }
 
+    // Remove Movie
+
     removeMovie(index) {
 
         this.validateIndex(index);
@@ -87,6 +108,8 @@ export class MovieManager {
         this.save();
 
     }
+
+    // Watched and Unwatched Status
 
     toggleWatched(index) {
 
@@ -100,6 +123,34 @@ export class MovieManager {
         return this.movies[index].watched;
 
     }
+
+    // Rate Movie
+
+    rateMovie(index, rating) {
+
+        this.validateIndex(index);
+
+        if (
+            !Number.isInteger(rating) ||
+            rating < 1 ||
+            rating > 5
+        ) {
+
+            throw new Error(
+                "Rating must be between 1 and 5."
+            );
+
+        }
+
+        this.movies[index].rating = rating;
+
+        this.save();
+
+        return rating;
+
+    }
+
+    // Calculate Dashboard Statistics
 
     getStats() {
 
@@ -122,12 +173,30 @@ export class MovieManager {
             ? Math.round(watched / total * 100)
             : 0;
 
+        const ratedMovies = this.movies.filter(
+            movie => movie.rating >= 1 &&
+                     movie.rating <= 5
+        );
+
+        const rated = ratedMovies.length;
+
+        const average = rated > 0
+            ? Number((
+                ratedMovies.reduce(
+                    (sum, movie) => sum + movie.rating,
+                    0
+                ) / rated
+            ).toFixed(1))
+            : 0;
+
         return {
             total,
             watched,
             unwatched,
             addedToday,
-            progress
+            progress,
+            rated,
+            average
         };
 
     }

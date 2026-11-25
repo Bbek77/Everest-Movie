@@ -7,9 +7,9 @@ export function createStorage(storage = localStorage) {
 
         load() {
 
-            return JSON.parse(
-                storage.getItem(key) || "[]"
-            );
+            const savedMovies = storage.getItem(key);
+
+            return JSON.parse(savedMovies || "[]");
 
         },
 

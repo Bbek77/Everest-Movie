@@ -47,19 +47,29 @@ document.querySelectorAll("[data-page]").forEach(button => {
 // Mobile Navigation
 
 function closeMenu() {
+
     sidebar.classList.remove("open");
     overlay.classList.remove("active");
+
     menuToggle.textContent = "☰";
+    menuToggle.setAttribute("aria-expanded", "false");
+
 }
 
 menuToggle.addEventListener("click", () => {
 
     if (sidebar.classList.contains("open")) {
+
         closeMenu();
+
     } else {
+
         sidebar.classList.add("open");
         overlay.classList.add("active");
+
         menuToggle.textContent = "✕";
+        menuToggle.setAttribute("aria-expanded", "true");
+
     }
 
 });
@@ -74,14 +84,16 @@ document.addEventListener("keydown", event => {
 
 });
 
-// Messages
+// Display Messages
 
 function showMessage(element, text, type) {
+
     element.textContent = text;
     element.className = type;
+
 }
 
-// Dashboard Statistics
+// Update Dashboard
 
 function updateDashboard() {
 
@@ -108,6 +120,19 @@ function updateDashboard() {
     document.getElementById("quickWatched").textContent =
         stats.watched;
 
+    document.getElementById("ratedMovies").textContent =
+        stats.rated;
+
+    const average = stats.rated > 0
+        ? stats.average.toFixed(1)
+        : "—";
+
+    document.getElementById("averageRating").textContent =
+        average;
+
+    document.getElementById("quickAverage").textContent =
+        average;
+
     document.getElementById("progressBar").style.width =
         stats.progress + "%";
 
@@ -116,7 +141,93 @@ function updateDashboard() {
 
 }
 
-// Display Movies
+// Create Movie Rating Section
+
+function createRatingSection(movie, index) {
+
+    const section = document.createElement("div");
+    section.className = "rating-section";
+
+    const label = document.createElement("p");
+    label.className = "rating-label";
+    label.textContent = "YOUR RATING";
+
+    const stars = document.createElement("div");
+    stars.className = "rating-stars";
+
+    for (let rating = 1; rating <= 5; rating++) {
+
+        const star = document.createElement("button");
+
+        star.type = "button";
+        star.className = "star-btn";
+
+        star.textContent = rating <= movie.rating
+            ? "★"
+            : "☆";
+
+        star.classList.toggle(
+            "selected",
+            rating <= movie.rating
+        );
+
+        star.setAttribute(
+            "aria-label",
+            "Rate " + movie.title + " " +
+            rating + " out of 5 stars"
+        );
+
+        star.setAttribute(
+            "aria-pressed",
+            String(rating === movie.rating)
+        );
+
+        star.addEventListener("click", () => {
+
+            try {
+
+                manager.rateMovie(index, rating);
+
+                displayMovies();
+
+                showMessage(
+                    watchlistMessage,
+                    "Movie rated successfully!",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    watchlistMessage,
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        });
+
+        stars.appendChild(star);
+
+    }
+
+    const value = document.createElement("span");
+    value.className = "rating-value";
+
+    value.textContent = movie.rating > 0
+        ? movie.rating + " / 5"
+        : "Not rated";
+
+    stars.appendChild(value);
+
+    section.append(label, stars);
+
+    return section;
+
+}
+
+// Display Saved Movies
 
 function displayMovies() {
 
@@ -155,7 +266,7 @@ function displayMovies() {
         const actions = document.createElement("div");
         actions.className = "movie-actions";
 
-        // Watched Button
+        // Watched Status Button
 
         const statusButton = document.createElement("button");
 
@@ -177,21 +288,33 @@ function displayMovies() {
 
         statusButton.addEventListener("click", () => {
 
-            const watched = manager.toggleWatched(index);
+            try {
 
-            displayMovies();
+                const watched = manager.toggleWatched(index);
 
-            showMessage(
-                watchlistMessage,
-                watched
-                    ? "Movie marked as watched!"
-                    : "Movie marked as unwatched!",
-                "success"
-            );
+                displayMovies();
+
+                showMessage(
+                    watchlistMessage,
+                    watched
+                        ? "Movie marked as watched!"
+                        : "Movie marked as unwatched!",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    watchlistMessage,
+                    error.message,
+                    "error"
+                );
+
+            }
 
         });
 
-        // Remove Button
+        // Remove Movie Button
 
         const removeButton = document.createElement("button");
 
@@ -200,21 +323,37 @@ function displayMovies() {
 
         removeButton.addEventListener("click", () => {
 
-            manager.removeMovie(index);
+            try {
 
-            displayMovies();
+                manager.removeMovie(index);
 
-            showMessage(
-                watchlistMessage,
-                "Movie removed successfully!",
-                "success"
-            );
+                displayMovies();
+
+                showMessage(
+                    watchlistMessage,
+                    "Movie removed successfully!",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    watchlistMessage,
+                    error.message,
+                    "error"
+                );
+
+            }
 
         });
 
         actions.append(statusButton, removeButton);
 
-        li.append(header, actions);
+        li.append(
+            header,
+            actions,
+            createRatingSection(movie, index)
+        );
 
         movieList.appendChild(li);
 

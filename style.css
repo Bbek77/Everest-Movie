@@ -11,8 +11,14 @@
     --accent: #c4b99a;
 }
 
+/* General Styling */
+
 * {
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -38,7 +44,7 @@ button, input {
 
 button {
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
 }
 
 button:focus-visible,
@@ -129,7 +135,7 @@ input:focus-visible {
     cursor: default;
 }
 
-/* Quick Stats */
+/* Sidebar Quick Statistics */
 
 .quick-stats {
     margin-top: auto;
@@ -147,7 +153,7 @@ input:focus-visible {
     justify-content: space-between;
     color: var(--muted);
     font-size: 13px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .stat-row strong {
@@ -162,6 +168,11 @@ input:focus-visible {
     margin-left: 280px;
     padding: 45px;
     min-height: 100vh;
+}
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .page-header {
@@ -195,6 +206,9 @@ input:focus-visible {
     border-radius: 12px;
     padding: 28px;
     min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .stat-card.green {
@@ -246,7 +260,7 @@ input:focus-visible {
     height: 100%;
     background: #729478;
     border-radius: 20px;
-    transition: width 0.3s;
+    transition: width 0.3s ease;
 }
 
 #progressText {
@@ -278,7 +292,7 @@ input:focus-visible {
     border-bottom: none;
 }
 
-/* Welcome and Empty States */
+/* Welcome Panel */
 
 .welcome-panel,
 .empty-state {
@@ -333,6 +347,10 @@ input:focus-visible {
     border-radius: 8px;
     color: var(--text);
     padding: 15px;
+}
+
+#movieTitle::placeholder {
+    color: #77776f;
 }
 
 #movieForm .primary-button {
@@ -391,7 +409,7 @@ input:focus-visible {
     margin-top: 15px;
 }
 
-/* Watched Status */
+/* Watched and Unwatched Buttons */
 
 .status-btn {
     border: 1px solid #514a36;
@@ -412,7 +430,7 @@ input:focus-visible {
     filter: brightness(1.2);
 }
 
-/* Remove Button */
+/* Remove Movie Button */
 
 .remove-btn {
     background: #352323;
@@ -426,6 +444,53 @@ input:focus-visible {
 
 .remove-btn:hover {
     background: #503030;
+}
+
+/* Movie Rating Section */
+
+.rating-section {
+    margin-top: 18px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.rating-label {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin: 0 0 8px;
+}
+
+.rating-stars {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.star-btn {
+    background: transparent;
+    border: none;
+    color: #77776e;
+    font-size: 30px;
+    padding: 3px;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.star-btn.selected {
+    color: #d9b65c;
+}
+
+.star-btn:hover {
+    color: #f1d078;
+    transform: scale(1.15);
+}
+
+.rating-value {
+    color: var(--muted);
+    font-size: 13px;
+    margin-left: 10px;
 }
 
 /* Messages */
@@ -454,7 +519,7 @@ footer {
     padding: 25px 0;
 }
 
-/* Mobile Navigation */
+/* Mobile Menu */
 
 .menu-toggle {
     display: none;
@@ -477,6 +542,21 @@ footer {
     inset: 0;
     background: rgba(0, 0, 0, 0.65);
     z-index: 90;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #44443e;
+    border-radius: 10px;
 }
 
 /* Responsive Design */
@@ -533,5 +613,13 @@ footer {
 
     .welcome-panel {
         padding: 35px 20px;
+    }
+
+    .star-btn {
+        font-size: 26px;
+    }
+
+    .rating-value {
+        margin-left: 5px;
     }
 }
