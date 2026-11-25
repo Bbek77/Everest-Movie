@@ -6,15 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Everest Movie</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="script.js"></script>
+    <script src="script.js" defer></script>
 </head>
+
 <body>
 
+    <!-- Mobile Menu Button -->
     <button id="menuToggle" class="menu-toggle"
-        aria-label="Toggle navigation">☰</button>
+        aria-label="Toggle navigation"
+        aria-expanded="false">
+        ☰
+    </button>
 
     <div id="overlay" class="overlay"></div>
 
+    <!-- Sidebar -->
     <aside id="sidebar" class="sidebar">
 
         <div class="brand">
@@ -24,7 +30,6 @@
         </div>
 
         <nav class="navigation">
-
             <p class="section-label">NAVIGATION</p>
 
             <button class="nav-link active" data-page="dashboard">
@@ -42,42 +47,38 @@
             <p class="section-label">COMING SOON</p>
 
             <button class="nav-link" disabled>
-                ⭐ Movie Ratings
+                🔍 Movie Search
             </button>
 
             <button class="nav-link" disabled>
-                🔍 Movie Search
+                ⭐ Movie Ratings
             </button>
 
             <button class="nav-link" disabled>
                 💬 Discussions
             </button>
 
+            <button class="nav-link" disabled>
+                📊 Statistics
+            </button>
         </nav>
 
         <div class="quick-stats">
-
             <p class="section-label">QUICK STATS</p>
 
             <div class="stat-row">
-                <strong id="quickTotal">0</strong>
+                <span id="quickTotal">0</span>
                 <span>Movies Saved</span>
             </div>
-
-            <div class="stat-row">
-                <strong id="quickWatched">0</strong>
-                <span>Movies Watched</span>
-            </div>
-
         </div>
 
     </aside>
 
+    <!-- Main Content -->
     <main class="main-content">
 
-        <!-- Dashboard -->
-
-        <section id="dashboard" class="page">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
 
             <header class="page-header">
                 <h2>Your Movie Story</h2>
@@ -96,34 +97,9 @@
                     <p>MOVIES ADDED TODAY</p>
                 </div>
 
-                <div class="stat-card green">
-                    <h3 id="watchedMovies">0</h3>
-                    <p>MOVIES WATCHED</p>
-                </div>
-
-                <div class="stat-card gold">
-                    <h3 id="unwatchedMovies">0</h3>
-                    <p>MOVIES UNWATCHED</p>
-                </div>
-
             </div>
 
             <div class="panel">
-
-                <h2>Watching Progress</h2>
-
-                <div class="progress-track">
-                    <div id="progressBar" class="progress-bar"></div>
-                </div>
-
-                <p id="progressText">
-                    0% of your watchlist completed
-                </p>
-
-            </div>
-
-            <div class="panel">
-
                 <h2>Quick Actions</h2>
 
                 <button class="action-button" data-page="addMovie">
@@ -135,40 +111,43 @@
                     <span>🎬 View My Watchlist</span>
                     <span>→</span>
                 </button>
-
             </div>
 
             <div class="panel welcome-panel">
-
                 <div class="welcome-icon">🎥</div>
 
                 <h2>Welcome to Everest Movie!</h2>
 
                 <p>
                     Start building your personal movie collection.
-                    Save movies and track your watching progress.
+                    Save movies you want to watch and keep your
+                    watchlist organized.
                 </p>
 
                 <button class="primary-button" data-page="addMovie">
                     Add a Movie
                 </button>
-
             </div>
 
         </section>
 
-        <!-- Watchlist -->
-
+        <!-- Watchlist Page -->
         <section id="watchlist" class="page" hidden>
 
             <header class="page-header">
                 <h2>My Watchlist</h2>
-                <p>Organize and track your favorite movies.</p>
+                <p>All the movies you want to watch.</p>
             </header>
 
             <div class="panel">
 
-                <h2>Saved Movies</h2>
+                <div class="panel-heading">
+                    <h2>Saved Movies</h2>
+
+                    <button class="primary-button" data-page="addMovie">
+                        + Add Movie
+                    </button>
+                </div>
 
                 <ul id="movieList" class="movie-list"></ul>
 
@@ -184,8 +163,7 @@
 
         </section>
 
-        <!-- Add Movie -->
-
+        <!-- Add Movie Page -->
         <section id="addMovie" class="page" hidden>
 
             <header class="page-header">
@@ -220,7 +198,9 @@
 
         </section>
 
-        <footer>EVEREST MOVIE — SPRINT 2</footer>
+        <footer>
+            EVEREST MOVIE — SPRINT 1
+        </footer>
 
     </main>
 
