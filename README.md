@@ -1,58 +1,76 @@
+
 # Everest Movie
 
-## Project Overview
-
-Everest Movie is an app for making watchlists of
-personal movies collection. It has modern design in
-dark theme, dashboard, navigation sidebar, and mobile
-version.
-
-## Sprint 1
-
-The objective of Sprint 1 was to develop an
-app where users can add, view, and remove movies.
-Information about added movies is stored in browser
-local storage.
+Everest Movie is a web application that allows users
+to create and manage their personal movie watchlist.
 
 ## Features
 
-- Add, view, and remove movies.
-- Empty and duplicate title check.
-- Movie saving through refresh of the webpage.
-- Dashboard statistics update automatically.
-- Responsive Design & Mobile Navigation.
+- Add movies to a watchlist.
+- View saved movies.
+- Remove movies.
+- Prevent empty and duplicate movie titles.
+- Mark movies as watched or unwatched.
+- View dashboard statistics.
+- Track watching progress.
+- Save movie information using local storage.
 
-## Technologies Used
+## Technologies
 
-HTML, CSS, JavaScript, Local Storage, Git, and GitHub.
+- HTML
+- CSS
+- JavaScript
+- Local Storage
+- Vitest
 
-## How to Run
+## Requirements
 
-1. Download or clone the GitHub repository.
-2. Open project Everest-Movie directory.
-3. Open file index.html on any web browser.
+- Modern web browser
+- Python 3
+- Node.js
+- npm
 
-There is no need to install any other libraries or
-api.
+## Installation
 
-## Testing Results
+Install the project dependencies:
 
-11 manual test cases were passed, three
-user stories were achieved.
+    npm install
 
-## Known Limitations
+## Running the Application
 
-Movie information is stored locally in the
-browser. Accounts, movie searches, ratings and
-discussions were not implemented in this version.
+Start the local server:
 
-## Future Development
+    python3 -m http.server 8001
 
-Future sprints will include movies search,
-ratings, reviews, discussions, and more movie info.
+Open the following address in your browser:
 
-## Developer
+    http://localhost:8001/
 
-Bibek Yadav
-CS 319 - Fundamentals of Software Engineering
-Sprint 1 - First Working Increment
+## Automated Testing
+
+Run the automated tests:
+
+    npm test
+
+The watched-status test suite contains six tests.
+
+## SOLID Principles
+
+Single Responsibility Principle:
+
+MovieManager handles movie management, storage.js
+handles data persistence, and script.js handles the
+user interface.
+
+Dependency Inversion Principle:
+
+MovieManager receives its storage dependency through
+its constructor, allowing different storage
+implementations to be used during testing.
+
+## Limitations
+
+- Movie information is stored locally in the browser.
+- User accounts are not available.
+- Movie ratings, search, and discussions are not
+  implemented in this feature branch.
